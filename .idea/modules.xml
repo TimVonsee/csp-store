@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/CTFStore.iml" filepath="$PROJECT_DIR$/CTFStore.iml" />
+      <module fileurl="file://$PROJECT_DIR$/CSPStore.iml" filepath="$PROJECT_DIR$/CSPStore.iml" />
     </modules>
   </component>
 </project>

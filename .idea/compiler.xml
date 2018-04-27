@@ -6,10 +6,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="CSPStore" />
         <module name="CTFStore" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="CSPStore" target="1.7" />
       <module name="CTFStore" target="1.7" />
     </bytecodeTargetLevel>
   </component>
