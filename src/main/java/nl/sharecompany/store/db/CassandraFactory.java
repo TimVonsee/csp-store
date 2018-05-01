@@ -22,7 +22,7 @@ public class CassandraFactory {
      * Returns a cluster with specified cluster point(s) and port
      * @param contactPoints ip's
      * @param port network port
-     * @return
+     * @return cluster
      */
     public Cluster build(String[] contactPoints, int port){
         LOGGER.debug("Creating Cassandra Client {} {}", contactPoints, port);
