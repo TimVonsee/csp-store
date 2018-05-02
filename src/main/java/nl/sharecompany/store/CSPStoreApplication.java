@@ -2,7 +2,9 @@ package nl.sharecompany.store;
 
 import com.datastax.driver.core.Cluster;
 import nl.sharecompany.ctffeed.dfa.ArrayDFA;
-import nl.sharecompany.store.csp.DfaFactory;
+import nl.sharecompany.store.csp.BidDfaFactory;
+import nl.sharecompany.store.csp.command.EndOfBidMessageCommand;
+import nl.sharecompany.store.csp.message.Message;
 import nl.sharecompany.store.db.CassandraFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,21 +30,21 @@ public class CSPStoreApplication {
     public void run(String[] args) {
         // Setup connection to Cassandra
         CassandraFactory factory = new CassandraFactory();
-        Cluster session = factory.build();
+        Cluster cluster = factory.build();
+
         // TODO - Cassandra health check (see if  key space is there with expected column families)
 
         // Setup connection to data feed
-        byte[] buffer = new byte[BUFFER_SIZE];
-        ArrayDFA dfa = new DfaFactory().create();
+        Message msg = new Message();
+        ArrayDFA bidDFA = new BidDfaFactory(new EndOfBidMessageCommand(msg, 10), msg).create(); // TODO IoC maakt het wat raar
 
         String fileName = args[0];
-        LOGGER.debug("Reading from file {}", fileName);
-
+        byte[] buffer = new byte[BUFFER_SIZE];
         try(FileInputStream data = new FileInputStream(fileName)) {
             int size;
             do{
                 size = data.read(buffer, 0, buffer.length);
-                dfa.parse(buffer, 0, size);
+                bidDFA.parse(buffer, 0, size);
             } while (size > 0);
         } catch (FileNotFoundException e) {
             LOGGER.error("File not found", e);
@@ -50,8 +52,6 @@ public class CSPStoreApplication {
             LOGGER.error("IO Error", e);
         }
 
-        // TODO - Storage(cassandra_conn, data_feed_conn)
-            // Parsing of data to class
-            // Write data to Cassandra
+        cluster.close();
     }
 }
