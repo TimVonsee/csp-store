@@ -1,7 +1,6 @@
 package nl.sharecompany.store.csp.tokenhandlers;
 
 import nl.sharecompany.pattern.bytebuffercommand.IByteBufferCommand;
-import nl.sharecompany.store.csp.AskDfaFactory;
 import nl.sharecompany.store.csp.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
