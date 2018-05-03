@@ -9,15 +9,14 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EndOfBidMessageCommand implements ICommand {
-    private static final String INSERT_BID = "INSERT INTO fix_db.bids_by_day (src_id, symbol, day, uts, bid_ts, bid_price, bid_size) VALUES (?, ?, ?, now(), ?, ?, ?);";
-    private final Logger LOGGER = LoggerFactory.getLogger(EndOfBidMessageCommand.class);
+public class EndOfMessageCommand implements ICommand {
+    private final Logger LOGGER = LoggerFactory.getLogger(EndOfMessageCommand.class);
     private final Message msg;
     private final List<Object[]> microBatch;
     private final int batchLimit;
     private final BulkLoader bulkLoader;
 
-    public EndOfBidMessageCommand(Message msg, int batchLimit, BulkLoader bulkLoader) {
+    public EndOfMessageCommand(Message msg, int batchLimit, BulkLoader bulkLoader) {
         this.msg = msg;
         this.batchLimit = batchLimit;
         this.microBatch = new ArrayList<>(batchLimit);
@@ -49,7 +48,8 @@ public class EndOfBidMessageCommand implements ICommand {
 
     public void flush() {
         try {
-            this.bulkLoader.ingest(microBatch.iterator(), INSERT_BID);
+            //System.out.println("Flushing " + microBatch.size());
+            this.bulkLoader.insert(microBatch.iterator());
         } catch (InterruptedException e) {
             LOGGER.error("Error ",e);
         }

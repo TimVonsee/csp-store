@@ -8,14 +8,15 @@ import nl.sharecompany.store.csp.command.EndOfMessageCommand;
 import nl.sharecompany.store.csp.message.Message;
 import nl.sharecompany.store.csp.tokenhandlers.*;
 import nl.sharecompany.store.util.Token;
+
 import java.util.*;
 
-public class BidDfaFactory implements IFactory<IDFA> {
+public class AskDfaFactory implements IFactory<IDFA> {
 
     private final EndOfMessageCommand endOfMessageCommand;
     private Message message;
 
-    public BidDfaFactory(EndOfMessageCommand endOfMessageCommand, Message message) {
+    public AskDfaFactory(EndOfMessageCommand endOfMessageCommand, Message message) {
         this.endOfMessageCommand = endOfMessageCommand;
         this.message = message;
     }
@@ -27,11 +28,13 @@ public class BidDfaFactory implements IFactory<IDFA> {
         tokenHandlers.put(Token.CTF_SOURCE, new CtfSourceTokenHandler(message));
         tokenHandlers.put(Token.SYMBOL, new SymbolTokenHandler(message));
 
-        // Bid tokens
-        tokenHandlers.put(Token.BID_PRICE, new PriceTokenHandler(message));
-        tokenHandlers.put(Token.BID_SIZE, new SizeTokenHandler(message));
-        tokenHandlers.put(Token.BID_DATETIME, new DateTimeTokenHandler(message));
+        // Ask token handlers
+        tokenHandlers.put(Token.ASK_PRICE, new PriceTokenHandler(message));
+        tokenHandlers.put(Token.ASK_SIZE, new SizeTokenHandler(message));
+        tokenHandlers.put(Token.ASK_DATETIME, new DateTimeTokenHandler(message));
 
         return new ArrayDFA(tokenHandlers, endOfMessageCommand);
     }
+
+
 }

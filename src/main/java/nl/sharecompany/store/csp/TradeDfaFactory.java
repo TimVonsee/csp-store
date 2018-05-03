@@ -8,14 +8,16 @@ import nl.sharecompany.store.csp.command.EndOfMessageCommand;
 import nl.sharecompany.store.csp.message.Message;
 import nl.sharecompany.store.csp.tokenhandlers.*;
 import nl.sharecompany.store.util.Token;
-import java.util.*;
 
-public class BidDfaFactory implements IFactory<IDFA> {
+import java.util.HashMap;
+import java.util.Map;
+
+public class TradeDfaFactory implements IFactory<IDFA> {
 
     private final EndOfMessageCommand endOfMessageCommand;
     private Message message;
 
-    public BidDfaFactory(EndOfMessageCommand endOfMessageCommand, Message message) {
+    public TradeDfaFactory(EndOfMessageCommand endOfMessageCommand, Message message) {
         this.endOfMessageCommand = endOfMessageCommand;
         this.message = message;
     }
@@ -28,9 +30,9 @@ public class BidDfaFactory implements IFactory<IDFA> {
         tokenHandlers.put(Token.SYMBOL, new SymbolTokenHandler(message));
 
         // Bid tokens
-        tokenHandlers.put(Token.BID_PRICE, new PriceTokenHandler(message));
-        tokenHandlers.put(Token.BID_SIZE, new SizeTokenHandler(message));
-        tokenHandlers.put(Token.BID_DATETIME, new DateTimeTokenHandler(message));
+        tokenHandlers.put(Token.TRADE_PRICE, new PriceTokenHandler(message));
+        tokenHandlers.put(Token.TRADE_SIZE, new SizeTokenHandler(message));
+        tokenHandlers.put(Token.TRADE_DATETIME, new DateTimeTokenHandler(message));
 
         return new ArrayDFA(tokenHandlers, endOfMessageCommand);
     }
