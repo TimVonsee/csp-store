@@ -2,6 +2,7 @@ package nl.sharecompany.store;
 
 import static org.junit.Assert.assertTrue;
 
+import nl.sharecompany.store.util.Token;
 import org.junit.Test;
 
 import java.text.SimpleDateFormat;
@@ -47,7 +48,4 @@ public class CSPStoreApplicationTest
 
     }
 
-    public class Testing {
-        public String test;
-    }
 }

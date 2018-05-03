@@ -1,7 +1,9 @@
 package nl.sharecompany.store.csp.message;
 
+import java.util.Date;
+
 public class BaseMessage {
     public String ctfSource;
     public String symbol;
-    public String day;
+    public Date day;
 }

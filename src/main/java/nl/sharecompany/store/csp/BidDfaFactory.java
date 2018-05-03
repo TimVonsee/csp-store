@@ -6,8 +6,8 @@ import nl.sharecompany.pattern.bytebuffercommand.IByteBufferCommand;
 import nl.sharecompany.pattern.factory.IFactory;
 import nl.sharecompany.store.csp.command.EndOfBidMessageCommand;
 import nl.sharecompany.store.csp.message.Message;
+import nl.sharecompany.store.util.Token;
 import nl.sharecompany.store.util.Utilities;
-import org.apache.commons.lang3.time.FastDateFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,8 +15,7 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class BidDfaFactory implements IFactory<IDFA> {
 
@@ -32,13 +31,13 @@ public class BidDfaFactory implements IFactory<IDFA> {
     public ArrayDFA create() {
         final Map<String, IByteBufferCommand> tokenHandlers = new HashMap<String, IByteBufferCommand>();
 
-        tokenHandlers.put("4", new CtfSourceTokenHandler(message));
-        tokenHandlers.put("5", new SymbolTokenHandler(message));
+        tokenHandlers.put(Token.CTF_SOURCE, new CtfSourceTokenHandler(message));
+        tokenHandlers.put(Token.SYMBOL, new SymbolTokenHandler(message));
 
         // Bid tokens
-        tokenHandlers.put("12", new BidPriceTokenHandler(message));
-        tokenHandlers.put("13", new BidSizeTokenHandler(message));
-        tokenHandlers.put("20", new BidDateTimeTokenHandler(message));
+        tokenHandlers.put(Token.BID_PRICE, new BidPriceTokenHandler(message));
+        tokenHandlers.put(Token.BID_SIZE, new BidSizeTokenHandler(message));
+        tokenHandlers.put(Token.BID_DATETIME, new BidDateTimeTokenHandler(message));
 
         return new ArrayDFA(tokenHandlers, endOfMessageCommand);
     }
@@ -120,25 +119,27 @@ public class BidDfaFactory implements IFactory<IDFA> {
     private class BidDateTimeTokenHandler implements IByteBufferCommand {
 
         private final Message msg;
-        public final FastDateFormat dfIso = FastDateFormat.getInstance("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-        public final FastDateFormat dfDay = FastDateFormat.getInstance("yyyy-MM-dd");
-        private final StringBuffer sb = new StringBuffer(30);
 
         private BidDateTimeTokenHandler(Message msg) {
             this.msg = msg;
         }
 
-
         @Override
         public void execute(ByteBuffer value) {
             long lngUnixTime = Utilities.getTimestampAsMilliseconds(value);
-            sb.setLength(0);
 
-            String isoDate = dfIso.format(lngUnixTime);
-            String day = isoDate.substring(0,10);
+            Calendar tmp = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+            tmp.setTimeInMillis(lngUnixTime);
 
-            msg.day = day;
-            msg.timestamp = isoDate;
+            Date timestamp = tmp.getTime();
+
+            tmp.set(Calendar.HOUR_OF_DAY, 0);
+            tmp.set(Calendar.MINUTE, 0);
+            tmp.set(Calendar.SECOND, 0);
+            tmp.set(Calendar.MILLISECOND, 0);
+
+            msg.day = tmp.getTime();
+            msg.timestamp = timestamp;
         }
     }
 }

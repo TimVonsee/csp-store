@@ -1,9 +1,11 @@
 package nl.sharecompany.store.csp.message;
 
+import java.util.Date;
+
 public class Message extends BaseMessage {
     public String price;
     public String size;
-    public String timestamp;
+    public Date timestamp;
 
     public boolean hasData() {
         return symbol != null && ctfSource != null && day != null && price != null;
