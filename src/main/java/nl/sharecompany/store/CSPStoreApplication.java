@@ -33,7 +33,7 @@ public class CSPStoreApplication {
         // Setup connection to data feed
         DfaFactory dfaFactory = new DfaFactory(cluster);
 
-        ArrayDFA dfa = dfaFactory.getDfa(DfaFactory.DfaType.BID);
+        ArrayDFA dfa = dfaFactory.getDfa(DfaFactory.DfaType.FIX);
 
         String fileName = args[0];
         byte[] buffer = new byte[BUFFER_SIZE];

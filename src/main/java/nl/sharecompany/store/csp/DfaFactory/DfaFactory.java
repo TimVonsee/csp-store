@@ -2,7 +2,9 @@ package nl.sharecompany.store.csp.DfaFactory;
 
 import com.datastax.driver.core.Cluster;
 import nl.sharecompany.ctffeed.dfa.ArrayDFA;
+import nl.sharecompany.store.csp.command.EndOfFixCommand;
 import nl.sharecompany.store.csp.command.EndOfMessageCommand;
+import nl.sharecompany.store.csp.message.FixMessage;
 import nl.sharecompany.store.csp.message.Message;
 import nl.sharecompany.store.db.BulkLoader;
 
@@ -11,7 +13,7 @@ public class DfaFactory {
     private static final int BATCH_LIMIT = 60;
 
     public enum DfaType {
-        TRADE, BID, ASK
+        TRADE, BID, ASK, FIX
     }
 
     private static final String INSERT_ASK = "INSERT INTO fix_db.asks_by_day (src_id, symbol, day, uts, ask_ts, ask_price, ask_size) VALUES (?, ?, ?, now(), ?, ?, ?);";
@@ -32,9 +34,18 @@ public class DfaFactory {
                 return askDfa();
             case BID:
                 return bidDfa();
+            case FIX:
+                return fixDfa();
             default:
                 return null;
         }
+    }
+
+    private ArrayDFA fixDfa() {
+        FixMessage fixMessage = new FixMessage();
+        EndOfFixCommand endOfFixCommand =  new EndOfFixCommand(fixMessage);
+
+        return new FixDfaFactory(endOfFixCommand, fixMessage).create();
     }
 
     private ArrayDFA askDfa() {
