@@ -3,6 +3,7 @@ package nl.sharecompany.store.util;
 public class Token {
     public static final String CTF_SOURCE = "4";
     public static final String SYMBOL = "5";
+    public static final String ACTIVITY_DATETIME = "16";
 
     public static final String ASK_PRICE = "10";
     public static final String ASK_SIZE = "11";

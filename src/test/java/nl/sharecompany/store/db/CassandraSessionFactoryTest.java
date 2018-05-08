@@ -5,10 +5,7 @@ import com.datastax.driver.core.utils.UUIDs;
 import org.junit.Test;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
-import java.util.UUID;
+import java.util.*;
 
 
 public class CassandraSessionFactoryTest {
@@ -29,7 +26,7 @@ public class CassandraSessionFactoryTest {
 //                        r.getString("fix"));
 //
 
-            final PreparedStatement statement = s.prepare("INSERT INTO bids_by_day (src_id, symbol, day, uts, bid_ts, bid_price, bid_size) VALUES (?, ?, ?, ?, ?, ?, ?);");
+            final PreparedStatement statement = s.prepare("INSERT INTO fix_by_day (src_id, symbol, day, uts, fix) VALUES (?, ?, ?, now(), ?);");
 
             UUID timeuuid = UUIDs.timeBased();
 
@@ -46,8 +43,10 @@ public class CassandraSessionFactoryTest {
             System.out.println(day);
             System.out.println(tmp);
 
+            Map<String, String> fix = new HashMap<>();
+            fix.put("Lets", "Go");
 
-            Object[] objs = {"ID", "SYM", day, timeuuid, tmp, "PRICE", "SIZE"};
+            Object[] objs = {"ID", "SYM", day, fix};
             BoundStatement bound = statement.bind(objs);
             s.execute(bound);
         }

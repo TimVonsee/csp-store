@@ -19,6 +19,7 @@ public class DfaFactory {
     private static final String INSERT_ASK = "INSERT INTO fix_db.asks_by_day (src_id, symbol, day, uts, ask_ts, ask_price, ask_size) VALUES (?, ?, ?, now(), ?, ?, ?);";
     private static final String INSERT_BID = "INSERT INTO fix_db.bids_by_day (src_id, symbol, day, uts, bid_ts, bid_price, bid_size) VALUES (?, ?, ?, now(), ?, ?, ?);";
     private static final String INSERT_TRADE = "INSERT INTO fix_db.trades_by_day (src_id, symbol, day, uts, trade_ts, trade_price, trade_size) VALUES (?, ?, ?, now(), ?, ?, ?);";
+    private static final String INSERT_FIX = "INSERT INTO fix_db.fix_by_day (src_id, symbol, day, uts, fix) VALUES (?, ?, ?, now(), ?);";
 
     private Cluster cluster;
 
@@ -42,8 +43,10 @@ public class DfaFactory {
     }
 
     private ArrayDFA fixDfa() {
+        BulkLoader loader = new BulkLoader(THREADS, cluster.newSession(), INSERT_FIX);
+
         FixMessage fixMessage = new FixMessage();
-        EndOfFixCommand endOfFixCommand =  new EndOfFixCommand(fixMessage);
+        EndOfFixCommand endOfFixCommand =  new EndOfFixCommand(fixMessage, BATCH_LIMIT, loader);
 
         return new FixDfaFactory(endOfFixCommand, fixMessage).create();
     }

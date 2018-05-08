@@ -6,9 +6,7 @@ import nl.sharecompany.pattern.bytebuffercommand.IByteBufferCommand;
 import nl.sharecompany.pattern.factory.IFactory;
 import nl.sharecompany.store.csp.command.EndOfFixCommand;
 import nl.sharecompany.store.csp.message.FixMessage;
-import nl.sharecompany.store.csp.tokenhandlers.FixCtfSourceHandler;
-import nl.sharecompany.store.csp.tokenhandlers.FixHandler;
-import nl.sharecompany.store.csp.tokenhandlers.FixSymbolHandler;
+import nl.sharecompany.store.csp.tokenhandlers.*;
 import nl.sharecompany.store.util.Token;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +34,7 @@ public class FixDfaFactory implements IFactory<IDFA> {
 
         tokenHandlers.put(Token.CTF_SOURCE, new FixCtfSourceHandler(message));
         tokenHandlers.put(Token.SYMBOL, new FixSymbolHandler(message));
+        tokenHandlers.put(Token.ACTIVITY_DATETIME, new FixDateTimeTokenHandler(message));
 
         // Read Token properties file from resources folder
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();

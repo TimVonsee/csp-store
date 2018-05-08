@@ -32,7 +32,7 @@ public class BulkLoader {
 
         @Override
         public void onSuccess(ResultSet result) {
-            LOGGER.debug("Persist");
+            //LOGGER.debug("Persist");
         }
 
         @Override
