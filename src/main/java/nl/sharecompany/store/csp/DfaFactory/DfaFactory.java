@@ -6,7 +6,7 @@ import nl.sharecompany.store.csp.command.EndOfFixCommand;
 import nl.sharecompany.store.csp.command.EndOfMessageCommand;
 import nl.sharecompany.store.csp.message.FixMessage;
 import nl.sharecompany.store.csp.message.Message;
-import nl.sharecompany.store.db.BulkLoader;
+import nl.sharecompany.store.db.CassandraBulkLoader;
 
 public class DfaFactory {
     private static final int THREADS = 10;
@@ -43,7 +43,7 @@ public class DfaFactory {
     }
 
     private ArrayDFA fixDfa() {
-        BulkLoader loader = new BulkLoader(THREADS, cluster.newSession(), INSERT_FIX);
+        CassandraBulkLoader loader = new CassandraBulkLoader(THREADS, cluster.newSession(), INSERT_FIX);
 
         FixMessage fixMessage = new FixMessage();
         EndOfFixCommand endOfFixCommand =  new EndOfFixCommand(fixMessage, BATCH_LIMIT, loader);
@@ -53,7 +53,7 @@ public class DfaFactory {
 
     private ArrayDFA askDfa() {
         Message msg = new Message();
-        BulkLoader loader = new BulkLoader(THREADS, cluster.newSession(), INSERT_ASK);
+        CassandraBulkLoader loader = new CassandraBulkLoader(THREADS, cluster.newSession(), INSERT_ASK);
         EndOfMessageCommand endMsg = new EndOfMessageCommand(msg, BATCH_LIMIT, loader);
 
         return new AskDfaFactory(endMsg, msg).create();
@@ -61,7 +61,7 @@ public class DfaFactory {
 
     private ArrayDFA bidDfa() {
         Message msg = new Message();
-        BulkLoader loader = new BulkLoader(THREADS, cluster.newSession(), INSERT_BID);
+        CassandraBulkLoader loader = new CassandraBulkLoader(THREADS, cluster.newSession(), INSERT_BID);
         EndOfMessageCommand endMsg = new EndOfMessageCommand(msg, BATCH_LIMIT, loader);
 
         return new BidDfaFactory(endMsg, msg).create();
@@ -69,7 +69,7 @@ public class DfaFactory {
 
     private ArrayDFA tradeDfa() {
         Message msg = new Message();
-        BulkLoader loader = new BulkLoader(THREADS, cluster.newSession(), INSERT_TRADE);
+        CassandraBulkLoader loader = new CassandraBulkLoader(THREADS, cluster.newSession(), INSERT_TRADE);
 
         EndOfMessageCommand endMsg = new EndOfMessageCommand(msg, BATCH_LIMIT, loader);
         return new TradeDfaFactory(endMsg, msg).create();
