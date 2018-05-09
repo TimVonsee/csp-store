@@ -13,7 +13,7 @@ import java.util.*;
 
 public class AskDfaFactory implements IFactory<IDFA> {
     private final EndOfMessageCommand endOfMessageCommand;
-    private Message message;
+    private final Message message;
 
     public AskDfaFactory(EndOfMessageCommand endOfMessageCommand, Message message) {
         this.endOfMessageCommand = endOfMessageCommand;

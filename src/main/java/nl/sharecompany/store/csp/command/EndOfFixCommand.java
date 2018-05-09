@@ -2,7 +2,7 @@ package nl.sharecompany.store.csp.command;
 
 import nl.sharecompany.pattern.simplecommand.ICommand;
 import nl.sharecompany.store.csp.message.FixMessage;
-import nl.sharecompany.store.db.CassandraBulkLoader;
+import nl.sharecompany.store.db.BulkLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,9 +15,9 @@ public class EndOfFixCommand implements ICommand {
     private final FixMessage msg;
     private final List<Object[]> microBatch;
     private final int batchLimit;
-    private final CassandraBulkLoader bulkLoader;
+    private final BulkLoader bulkLoader;
 
-    public EndOfFixCommand(FixMessage msg, int batchLimit, CassandraBulkLoader bulkLoader) {
+    public EndOfFixCommand(FixMessage msg, int batchLimit, BulkLoader bulkLoader) {
         this.msg = msg;
         this.batchLimit = batchLimit;
         this.microBatch = new ArrayList<>(batchLimit);

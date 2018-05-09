@@ -1,8 +1,5 @@
 package nl.sharecompany.store;
 
-import static org.junit.Assert.assertTrue;
-
-import nl.sharecompany.store.util.Token;
 import org.junit.Test;
 
 import java.text.SimpleDateFormat;
@@ -26,7 +23,7 @@ public class CSPStoreApplicationTest
 
         Iterator<Object[]> rows = new Iterator<Object[]>() {
             int i = 0;
-            Random random = new Random();
+            final Random random = new Random();
 
             @Override
             public boolean hasNext() {

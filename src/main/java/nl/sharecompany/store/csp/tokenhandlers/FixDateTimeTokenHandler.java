@@ -2,12 +2,10 @@ package nl.sharecompany.store.csp.tokenhandlers;
 
 import nl.sharecompany.pattern.bytebuffercommand.IByteBufferCommand;
 import nl.sharecompany.store.csp.message.BaseMessage;
-import nl.sharecompany.store.csp.message.Message;
 import nl.sharecompany.store.util.Utilities;
 
 import java.nio.ByteBuffer;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.TimeZone;
 
 public class FixDateTimeTokenHandler implements IByteBufferCommand {

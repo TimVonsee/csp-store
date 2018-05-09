@@ -15,7 +15,7 @@ import java.util.Map;
 public class TradeDfaFactory implements IFactory<IDFA> {
 
     private final EndOfMessageCommand endOfMessageCommand;
-    private Message message;
+    private final Message message;
 
     public TradeDfaFactory(EndOfMessageCommand endOfMessageCommand, Message message) {
         this.endOfMessageCommand = endOfMessageCommand;

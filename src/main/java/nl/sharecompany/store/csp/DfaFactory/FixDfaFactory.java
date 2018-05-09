@@ -11,7 +11,6 @@ import nl.sharecompany.store.util.Token;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -21,7 +20,7 @@ import java.util.Properties;
 public class FixDfaFactory implements IFactory<IDFA> {
     private final Logger LOGGER = LoggerFactory.getLogger(FixDfaFactory.class);
     private final EndOfFixCommand endOfFixCommand;
-    private FixMessage message;
+    private final FixMessage message;
 
     public FixDfaFactory(EndOfFixCommand endOfFixCommand, FixMessage message) {
         this.endOfFixCommand = endOfFixCommand;

@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class FixMessage extends BaseMessage{
-    public Map<String, String> fix = new HashMap<>();
+    public final Map<String, String> fix = new HashMap<>();
 
     public void reset() {
         symbol = null;

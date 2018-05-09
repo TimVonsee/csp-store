@@ -28,7 +28,7 @@ public class CSPStoreApplication {
         CassandraFactory factory = new CassandraFactory();
         Cluster cluster = factory.build();
 
-        // TODO - Cassandra health check (see if  key space is there with expected column families)
+        // TODO - Cassandra health check (see if key space is there with expected column families)
 
         // Setup connection to data feed
         DfaFactory dfaFactory = new DfaFactory(cluster);

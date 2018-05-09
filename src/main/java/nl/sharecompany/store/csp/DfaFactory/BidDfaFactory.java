@@ -13,7 +13,7 @@ import java.util.*;
 public class BidDfaFactory implements IFactory<IDFA> {
 
     private final EndOfMessageCommand endOfMessageCommand;
-    private Message message;
+    private final Message message;
 
     public BidDfaFactory(EndOfMessageCommand endOfMessageCommand, Message message) {
         this.endOfMessageCommand = endOfMessageCommand;

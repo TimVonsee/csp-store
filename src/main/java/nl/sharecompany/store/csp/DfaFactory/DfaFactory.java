@@ -21,7 +21,7 @@ public class DfaFactory {
     private static final String INSERT_TRADE = "INSERT INTO fix_db.trades_by_day (src_id, symbol, day, uts, trade_ts, trade_price, trade_size) VALUES (?, ?, ?, now(), ?, ?, ?);";
     private static final String INSERT_FIX = "INSERT INTO fix_db.fix_by_day (src_id, symbol, day, uts, fix) VALUES (?, ?, ?, now(), ?);";
 
-    private Cluster cluster;
+    private final Cluster cluster;
 
     public DfaFactory(Cluster cluster) {
         this.cluster = cluster;
