@@ -6,7 +6,7 @@ import nl.sharecompany.pattern.bytebuffercommand.IByteBufferCommand;
 import nl.sharecompany.pattern.factory.IFactory;
 import nl.sharecompany.store.csp.command.EndOfMessageCommand;
 import nl.sharecompany.store.csp.message.Message;
-import nl.sharecompany.store.csp.tokenhandlers.*;
+import nl.sharecompany.store.csp.transformers.*;
 import nl.sharecompany.store.util.Token;
 
 import java.util.*;

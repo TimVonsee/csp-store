@@ -1,4 +1,4 @@
-package nl.sharecompany.store.db;
+package nl.sharecompany.store.storage;
 
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.HostDistance;
@@ -17,7 +17,7 @@ public class CassandraFactory {
      * @return cluster
      */
     public Cluster build(){
-        return this.build(new String[]{"127.0.0.1"}, 9042);
+        return this.build(new String[]{"127.0.0.1"}, 9042, 2, 5);
     }
 
     /**
@@ -26,13 +26,13 @@ public class CassandraFactory {
      * @param port network port
      * @return cluster
      */
-    public Cluster build(String[] contactPoints, int port){
+    public Cluster build(String[] contactPoints, int port, int connections, int maxConnections){
         LOGGER.debug("Creating Cassandra Client {} {}", contactPoints, port);
 
         PoolingOptions poolingOptions = new PoolingOptions();
         poolingOptions
                 .setMaxQueueSize(512)
-                .setConnectionsPerHost(HostDistance.LOCAL,  2, 5);
+                .setConnectionsPerHost(HostDistance.LOCAL,  connections, maxConnections);
 
         return Cluster.builder()
                 .addContactPoints(contactPoints)

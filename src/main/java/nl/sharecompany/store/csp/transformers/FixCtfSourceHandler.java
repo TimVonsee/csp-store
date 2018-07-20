@@ -1,4 +1,4 @@
-package nl.sharecompany.store.csp.tokenhandlers;
+package nl.sharecompany.store.csp.transformers;
 
 import nl.sharecompany.pattern.bytebuffercommand.IByteBufferCommand;
 import nl.sharecompany.store.csp.message.FixMessage;
@@ -10,13 +10,13 @@ import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 
-public class FixSymbolHandler implements IByteBufferCommand {
+public class FixCtfSourceHandler implements IByteBufferCommand {
     private final Logger LOGGER = LoggerFactory.getLogger(BaseTokenHandler.class);
     private final CharBuffer charValue = CharBuffer.allocate(30);
     private final CharsetDecoder decoder = Charset.defaultCharset().newDecoder();
     private final FixMessage msg;
 
-    public FixSymbolHandler(FixMessage msg) {
+    public FixCtfSourceHandler(FixMessage msg) {
         this.msg = msg;
     }
 
@@ -25,8 +25,7 @@ public class FixSymbolHandler implements IByteBufferCommand {
         try {
             decoder.decode(value, charValue, true);
             charValue.flip();
-
-            msg.symbol = charValue.toString();
+            msg.ctfSource = charValue.toString();
             charValue.clear();
         } catch(Exception e) {
             LOGGER.warn("Conversion failed. {}, exception: {}", charValue, e);

@@ -1,4 +1,4 @@
-package nl.sharecompany.store.db;
+package nl.sharecompany.store.storage;
 
 import com.datastax.driver.core.*;
 import com.google.common.util.concurrent.FutureCallback;
@@ -18,6 +18,7 @@ public class CassandraBulkLoader implements BulkLoader{
     private final Session session;
     private final ExecutorService executor;
     private final PreparedStatement statement;
+    private static final InsertCallback callback = new InsertCallback();
 
     public CassandraBulkLoader(int threads, Session session, String insertCQL) {
         this.session = session;
@@ -26,28 +27,32 @@ public class CassandraBulkLoader implements BulkLoader{
         this.statement = session.prepare(insertCQL);
     }
 
-    //callback class
+    /**
+     * Class used to handle success or failure of writes
+     */
     public static class InsertCallback implements FutureCallback<ResultSet> {
         private final Logger LOGGER = LoggerFactory.getLogger(CassandraBulkLoader.class);
 
         @Override
         public void onSuccess(ResultSet result) {
-            //LOGGER.debug("Persist");
+            // Be cautious when adding code here since this will degrade write performance
+            // LOGGER.debug("Persist");
         }
 
         @Override
         public void onFailure(Throwable t) {
             LOGGER.error("Insertion error: " + t.getMessage());
-            //throw new RuntimeException(t);
+            // throw new RuntimeException(t);
         }
     }
 
     @Override
     public void insert(Iterator<Object[]> batch) {
+        // Batched is emptied while *reusing* the PreparedStatement, connection session and is Async.
         while (batch.hasNext()) {
             BoundStatement boundStatement = statement.bind(batch.next());
             ResultSetFuture future = session.executeAsync(boundStatement);
-            Futures.addCallback(future, new InsertCallback(), executor);
+            Futures.addCallback(future, callback, executor);
         }
     }
 

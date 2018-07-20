@@ -6,7 +6,7 @@ import nl.sharecompany.store.csp.command.EndOfFixCommand;
 import nl.sharecompany.store.csp.command.EndOfMessageCommand;
 import nl.sharecompany.store.csp.message.FixMessage;
 import nl.sharecompany.store.csp.message.Message;
-import nl.sharecompany.store.db.CassandraBulkLoader;
+import nl.sharecompany.store.storage.CassandraBulkLoader;
 
 public class DfaFactory {
     private static final int THREADS = 10;
@@ -27,51 +27,51 @@ public class DfaFactory {
         this.cluster = cluster;
     }
 
-    public ArrayDFA getDfa(DfaType type) {
+    public ArrayDFA getDfa(DfaType type, int threads, int batchSize) {
         switch (type){
             case TRADE:
-                return tradeDfa();
+                return tradeDfa(threads, batchSize);
             case ASK:
-                return askDfa();
+                return askDfa(threads, batchSize);
             case BID:
-                return bidDfa();
+                return bidDfa(threads, batchSize);
             case FIX:
-                return fixDfa();
+                return fixDfa(threads, batchSize);
             default:
                 return null;
         }
     }
 
-    private ArrayDFA fixDfa() {
-        CassandraBulkLoader loader = new CassandraBulkLoader(THREADS, cluster.newSession(), INSERT_FIX);
+    private ArrayDFA fixDfa(int threads, int batchSize) {
+        CassandraBulkLoader loader = new CassandraBulkLoader(threads, cluster.newSession(), INSERT_FIX);
 
         FixMessage fixMessage = new FixMessage();
-        EndOfFixCommand endOfFixCommand =  new EndOfFixCommand(fixMessage, BATCH_LIMIT, loader);
+        EndOfFixCommand endOfFixCommand =  new EndOfFixCommand(fixMessage, batchSize, loader);
 
         return new FixDfaFactory(endOfFixCommand, fixMessage).create();
     }
 
-    private ArrayDFA askDfa() {
+    private ArrayDFA askDfa(int threads, int batchSize) {
         Message msg = new Message();
-        CassandraBulkLoader loader = new CassandraBulkLoader(THREADS, cluster.newSession(), INSERT_ASK);
-        EndOfMessageCommand endMsg = new EndOfMessageCommand(msg, BATCH_LIMIT, loader);
+        CassandraBulkLoader loader = new CassandraBulkLoader(threads, cluster.newSession(), INSERT_ASK);
+        EndOfMessageCommand endMsg = new EndOfMessageCommand(msg, batchSize, loader);
 
         return new AskDfaFactory(endMsg, msg).create();
     }
 
-    private ArrayDFA bidDfa() {
+    private ArrayDFA bidDfa(int threads, int batchSize) {
         Message msg = new Message();
-        CassandraBulkLoader loader = new CassandraBulkLoader(THREADS, cluster.newSession(), INSERT_BID);
-        EndOfMessageCommand endMsg = new EndOfMessageCommand(msg, BATCH_LIMIT, loader);
+        CassandraBulkLoader loader = new CassandraBulkLoader(threads, cluster.newSession(), INSERT_BID);
+        EndOfMessageCommand endMsg = new EndOfMessageCommand(msg, batchSize, loader);
 
         return new BidDfaFactory(endMsg, msg).create();
     }
 
-    private ArrayDFA tradeDfa() {
+    private ArrayDFA tradeDfa(int threads, int batchSize) {
         Message msg = new Message();
-        CassandraBulkLoader loader = new CassandraBulkLoader(THREADS, cluster.newSession(), INSERT_TRADE);
+        CassandraBulkLoader loader = new CassandraBulkLoader(threads, cluster.newSession(), INSERT_TRADE);
 
-        EndOfMessageCommand endMsg = new EndOfMessageCommand(msg, BATCH_LIMIT, loader);
+        EndOfMessageCommand endMsg = new EndOfMessageCommand(msg, batchSize, loader);
         return new TradeDfaFactory(endMsg, msg).create();
     }
 }

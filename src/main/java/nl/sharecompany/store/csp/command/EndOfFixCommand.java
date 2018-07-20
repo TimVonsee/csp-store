@@ -2,7 +2,7 @@ package nl.sharecompany.store.csp.command;
 
 import nl.sharecompany.pattern.simplecommand.ICommand;
 import nl.sharecompany.store.csp.message.FixMessage;
-import nl.sharecompany.store.db.BulkLoader;
+import nl.sharecompany.store.storage.BulkLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
